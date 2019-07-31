@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import EventSource from 'event-source';
 
 const App: React.FC = () => {
     const [message, setMessage] = useState();

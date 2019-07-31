@@ -16,3 +16,6 @@ React will run on port 3000 by default
 # [Explains more](https://www.jsdiaries.com/dynamic-website-design-with-event-source/)
 
 * Add an id so the browser will automatically know if the data has changed
+
+# Spring
+https://www.baeldung.com/spring-server-sent-events
