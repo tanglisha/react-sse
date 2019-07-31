@@ -1,11 +1,12 @@
 # GO
-`yarn start` 
+`$ yarn start` 
 
 (Open new shell session)
 
-`cd src`
-
-`node fakeServer.js`
+```
+$ cd src
+$ node fakeServer.js
+```
 
 The fake server, which does backend stuff, will run on port 5555
 React will run on port 3000 by default
