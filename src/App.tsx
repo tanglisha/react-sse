@@ -1,50 +1,41 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import EventSource from 'event-source';
+import {Observable} from 'rxjs';
 
 const App: React.FC = () => {
-    const [message, setMessage] = useState();
+    type Pet = {
+        num_adopted: number;
+        cats: string[];
+        dogs: string[];
+        birds: string[];
+    }
 
-    const es: EventSource = new EventSource('http://localhost:5555/stream');
+    const [loading, setLoading] = useState<boolean>(true);
+    const [pets, setPets] = useState<Pet[]>();
 
-    type MessageType = {
-        data: {message: string},
-    };
-
-    es.onmessage = event => {
-                            console.log(event.data);
-                            setMessage(JSON.parse(event.data).message);
-        es.close();
-                        };
-
-    es.addEventListener('open', function(e) {
-        // Connection was opened.
-    }, false);
-
-    es.addEventListener('error', function(e) {
-        // @ts-ignore
-        if (e.readyState === EventSource.CLOSED) {
-            // Connection was closed.
-        }
-    }, false);
+    const observeMessages = (sseUrl: string): Observable<string> => {
+        return new Observable<string>(obs => {
+            const es = new EventSource(sseUrl);
+            es.addEventListener('message', (evt) => {
+                console.log(evt.data);
+                obs.next(evt.data);
+            });
+            return () => es.close();
+        });
+    }
+    observeMessages('http://localhost:555/stream')
+        .subscribe((data:string) => {
+            const parsedData = JSON.parse(data);
+            setPets(parsedData);
+            setLoading(false);
+        });
 
     return (
         <div className="App">
             <header className="App-header">
-                <div>{ message }</div>
                 <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
+                    <div>{ loading? 'Loading...': pets }</div>
             </header>
         </div>
     );
