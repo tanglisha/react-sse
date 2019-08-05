@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {Observable, schedule} from 'rxjs';
+import {Observable } from 'rxjs';
 
 const App: React.FC = () => {
     type PetData = {
-        num_adopted: number;
+        total_adopted: number;
         cats: string[];
         dogs: string[];
         birds: string[];
@@ -24,12 +24,16 @@ const App: React.FC = () => {
             return () => es.close();
         });
     }
-    observeMessages('http://localhost:5555/stream')
-        .subscribe((data:string) => {
-            const parsedData:PetData = JSON.parse(data);
-            setPets(parsedData);
-            setLoading(false);
-        });
+    useEffect(() => {
+        const subscription = observeMessages('http://localhost:5555/stream')
+            .subscribe((data:string) => {
+                setLoading(true);
+                const parsedData:PetData = JSON.parse(data);
+                setPets(parsedData);
+                setLoading(false);
+            });
+        return () => subscription.unsubscribe();
+ }, []);
 
     const showAnimal = (animal: string[]) => {
         return animal.map(x => (<li>{x}</li>));
@@ -38,7 +42,7 @@ const App: React.FC = () => {
     const showPetData = (petData: PetData) => {
         return (
             <div>
-                <div>Already adopted: { petData.num_adopted }</div>
+                <div>Already adopted: { Math.round(petData.total_adopted) }</div>
                 <div>Cats still available</div>
                 <ul>
                     { showAnimal(petData.cats) }
@@ -51,7 +55,7 @@ const App: React.FC = () => {
         <div className="App">
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                    <div>{ loading? 'Loading...': showPetData(pets) }</div>
+                    <div>{ loading || !pets? 'Loading...': showPetData(pets) }</div>
             </header>
         </div>
     );
