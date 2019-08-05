@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {Observable} from 'rxjs';
+import {Observable, schedule} from 'rxjs';
 
 const App: React.FC = () => {
-    type Pet = {
+    type PetData = {
         num_adopted: number;
         cats: string[];
         dogs: string[];
@@ -12,7 +12,7 @@ const App: React.FC = () => {
     }
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [pets, setPets] = useState<Pet[]>();
+    const [pets, setPets] = useState<PetData>();
 
     const observeMessages = (sseUrl: string): Observable<string> => {
         return new Observable<string>(obs => {
@@ -24,18 +24,34 @@ const App: React.FC = () => {
             return () => es.close();
         });
     }
-    observeMessages('http://localhost:555/stream')
+    observeMessages('http://localhost:5555/stream')
         .subscribe((data:string) => {
-            const parsedData = JSON.parse(data);
+            const parsedData:PetData = JSON.parse(data);
             setPets(parsedData);
             setLoading(false);
         });
+
+    const showAnimal = (animal: string[]) => {
+        return animal.map(x => (<li>{x}</li>));
+    };
+
+    const showPetData = (petData: PetData) => {
+        return (
+            <div>
+                <div>Already adopted: { petData.num_adopted }</div>
+                <div>Cats still available</div>
+                <ul>
+                    { showAnimal(petData.cats) }
+                </ul>
+            </div>
+        );
+    };
 
     return (
         <div className="App">
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                    <div>{ loading? 'Loading...': pets }</div>
+                    <div>{ loading? 'Loading...': showPetData(pets) }</div>
             </header>
         </div>
     );

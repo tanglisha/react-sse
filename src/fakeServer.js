@@ -16,9 +16,8 @@ var pets = {
 };
 
 SSEServer(client => {
-    // Every 10 seconds send data to client
     setInterval(() => {
         client.id = counter;
-        client.send(pets);
+        client.send(JSON.stringify(pets));
     }, interval);
 });
