@@ -3,10 +3,18 @@ const SSEServer = require('sse-fake-server');
 // Pass callback to SSEServer
 var counter = 0;
 var change = false;
-var min=4;
-var max=5;
-var num_pets = Math.random() * (+1 - +3) + +min;
-var interval = Math.random() * (+1000 - +30000) + +min;
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var num_pets = getRandomInt(1, 1000);
+
+var oneSecond=1000;
+var thirtySeconds=30000;
+var interval = getRandomInt(oneSecond, thirtySeconds);
 
 var pets = {
     total_adopted: num_pets,
