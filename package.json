@@ -7,14 +7,17 @@
     "@types/node": "12.6.8",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.5",
+    "@types/sinon": "^9.0.0",
     "eventsource": "^1.0.7",
     "http-proxy-middleware": "^0.19.1",
+    "jasmine": "^3.5.0",
     "lodash": "^4.17.15",
     "lodash.template": "^4.5.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "rxjs": "^6.5.2",
+    "sinon": "^9.0.2",
     "sse-fake-server": "^1.0.4",
     "typescript": "3.5.3"
   },
@@ -38,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/react": "^10.0.3"
   }
 }
