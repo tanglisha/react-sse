@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { PetData } from "./Api";
 
 const App: React.FC = () => {
-    type PetData = {
-        total_adopted: number;
-        cats: string[];
-        dogs: string[];
-        birds: string[];
-    }
 
     const [loading, setLoading] = useState<boolean>(true);
     const [pets, setPets] = useState<PetData>();
@@ -26,14 +21,14 @@ const App: React.FC = () => {
     }
     useEffect(() => {
         const subscription = observeMessages('http://localhost:5555/stream')
-            .subscribe((data:string) => {
+            .subscribe((data: string) => {
                 setLoading(true);
-                const parsedData:PetData = JSON.parse(data);
+                const parsedData: PetData = JSON.parse(data);
                 setPets(parsedData);
                 setLoading(false);
             });
         return () => subscription.unsubscribe();
- }, []);
+    }, []);
 
     const showAnimal = (animal: string[]) => {
         return animal.map(x => (<li>{x}</li>));
@@ -42,10 +37,10 @@ const App: React.FC = () => {
     const showPetData = (petData: PetData) => {
         return (
             <div>
-                <div>Already adopted: { Math.round(petData.total_adopted) }</div>
+                <div>Already adopted: {Math.round(petData.total_adopted)}</div>
                 <div>Cats still available</div>
                 <ul>
-                    { showAnimal(petData.cats) }
+                    {showAnimal(petData.cats)}
                 </ul>
             </div>
         );
@@ -54,8 +49,8 @@ const App: React.FC = () => {
     return (
         <div className="App">
             <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                    <div>{ loading || !pets? 'Loading...': showPetData(pets) }</div>
+                <img src={logo} className="App-logo" alt="logo"/>
+                <div>{loading || !pets ? 'Loading...' : showPetData(pets)}</div>
             </header>
         </div>
     );

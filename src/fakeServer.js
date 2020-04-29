@@ -12,19 +12,22 @@ function getRandomInt(min, max) {
 
 var num_pets = getRandomInt(1, 1000);
 
-var oneSecond=1000;
-var thirtySeconds=30000;
-var interval = getRandomInt(oneSecond, thirtySeconds);
+let oneSecond=1000;
+let thirtySeconds=30000;
+let interval = getRandomInt(oneSecond, thirtySeconds);
 
-var pets = {
+let pets = {
     total_adopted: num_pets,
     dogs: ['Charlie', 'Betsy'],
-    cats: ['Anna', 'Patches', 'Lulu'],
+    cats: ['Anna', 'Patches', 'Lulu', 'Diego'],
     birds: ['Polly']
 };
 
 SSEServer(client => {
+    console.log(`interval is ${interval}`);
+
     setInterval(() => {
+        pets.total_adopted += getRandomInt(1, 5);
         client.id = counter;
         client.send(JSON.stringify(pets));
     }, interval);
