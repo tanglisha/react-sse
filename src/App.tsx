@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Observable } from 'rxjs';
-import { PetData } from "./Api";
+import { PetData, petStream$ } from "./Api";
+import { IMessage } from "@stomp/stompjs";
 
 const App: React.FC = () => {
-
     const [loading, setLoading] = useState<boolean>(true);
     const [pets, setPets] = useState<PetData>();
 
-    const observeMessages = (sseUrl: string): Observable<string> => {
-        return new Observable<string>(obs => {
-            const es = new EventSource(sseUrl);
-            es.addEventListener('message', (evt) => {
-                console.log(evt.data);
-                obs.next(evt.data);
-            });
-            return () => es.close();
-        });
-    }
     useEffect(() => {
-        const subscription = observeMessages('http://localhost:5555/stream')
-            .subscribe((data: string) => {
+        const subscription = petStream$
+            .subscribe((payload: IMessage) => {
                 setLoading(true);
-                const parsedData: PetData = JSON.parse(data);
+                const parsedData: PetData = JSON.parse(payload.body);
                 setPets(parsedData);
                 setLoading(false);
             });

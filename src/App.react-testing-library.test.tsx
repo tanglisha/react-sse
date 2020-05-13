@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { PetData } from './Api';
 import sinon, { createSandbox } from 'sinon';
-import { Observable, config, Subject } from "rxjs";
+import { config, Subject } from "rxjs";
 import App from "./App";
 // @ts-ignore
 import EventSource from "eventsourcemock";
+import { PetData } from "./Api";
 
 const sandbox = createSandbox(sinon.defaultConfig);
 
