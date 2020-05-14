@@ -2,7 +2,10 @@
   "name": "react-sse",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://127.0.0.1:3001",
   "dependencies": {
+    "@stomp/rx-stomp": "^0.3.5",
+    "@stomp/stompjs": "^5.4.4",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -10,12 +13,19 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/ws": "^7.2.4",
+    "@welldone-software/why-did-you-render": "^4.2.1",
     "copy-modules-webpack-plugin": "^2.1.1",
+    "cors": "^2.8.5",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
     "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
-    "typescript": "~3.7.2"
+    "rxjs": "^6.5.5",
+    "sockjs-client": "^1.4.0",
+    "typescript": "~3.7.2",
+    "ws": "^7.3.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -36,5 +46,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/sinon": "^9.0.0",
+    "sinon": "^9.0.2"
   }
 }

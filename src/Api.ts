@@ -1,4 +1,6 @@
-import { RxStomp } from "@stomp/rx-stomp";
+import { useSocketContext } from "./WebSocketContext";
+import { Observable } from "rxjs";
+import { IMessage } from "@stomp/stompjs";
 
 export interface PetData {
     total_adopted: number,
@@ -7,51 +9,28 @@ export interface PetData {
     birds: string[],
 };
 
-const stompConfig = {
-    // Typically login, passcode and vhost
-    // Adjust these for your broker
-    connectHeaders: {
-        login: "guest",
-        passcode: "guest"
-    },
+/*const {stompConnection} = useSocketContext();
 
-    // Broker URL, should start with ws:// or wss:// - adjust for your broker setup
-    brokerURL: "ws://localhost:3001",
-
-    // Keep it off for production, it can be quit verbose
-    // Skip this key to disable
-    debug: (str: string) => {
-        console.log('STOMP: ' + str);
-    },
-
-    // If disconnected, it will retry after 200ms
-    reconnectDelay: 200,
-};
-
-// Create an instance. The first RxStomp is the UMD module name and other is the class name
-const rxStomp = new RxStomp();
-
-// You can set additional configuration here
-rxStomp.configure(stompConfig);
-
-// Attempt to connect
-rxStomp.activate();
+stompConnection.publish$({
+    destination: '/topic/something',
+    headers: {'content-type': 'application/json'},
+    body: '{"some": "body"}',
+});
 
 // Watch will return an RxJS Observable which will yield messages for that end point.
 // You can call all RxJS operations like map, filter, etc. on this
-export const stream$ = (topic: string) => rxStomp.watch(`/topic/${topic}`);
-export const petStream$ = stream$('pets');
+export const topicStream$ = (topic: string) =>
+    stompConnection.subscribeToTopic$(topic, {subscription: 'sub-1'});
 
-rxStomp.publish({
-    destination: '/topic/something',
-    body: '{"some": "body"}',
-})
+export const petStream$: Observable<IMessage> = topicStream$('pets');
 
 
-rxStomp.publish({
+stompConnection.publish$({
     destination: '/topic/pets',
-    body: '{"total_adopted": 8,' +
-        '    "dogs": ["Charlie"],\n' +
-        '    "cats": ["Max", "Sue"],\n' +
-        '    "birds": ["Tweety"],}',
-})
+    body: JSON.stringify({
+        "total_adopted": 8,
+        "dogs": ["Charlie"],
+        "cats": ["Max", "Sue"],
+        "birds": ["Tweety"],
+    }),
+})*/
