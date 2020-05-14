@@ -2,25 +2,48 @@ const WebSocket = require('ws');
 
 const port = 3001;
 
-const wss = new WebSocket.Server({
+const ws = new WebSocket.Server({
     port: port,
 });
 
-wss.on('open', () => {
+ws.on('connection', (connection) => {
     setInterval(() => {
         pets.total_adopted += getRandomInt(1, 5);
-        console.log('in setInterval');
-        ws.send(JSON.stringify(pets));
-        wss.write(JSON.stringify(pets));
+        const petsText = JSON.stringify(pets);
+        const message = `MESSAGE
+message-id:pets-${num_pets}
+subscription:sub-1
+destination:/topic/pets
+content-type:application/json
+ack:0000${num_pets}000petstopic0000
+content-length: ${petsText.length}
+        
+${petsText}
+        `;
+
+        connection.send(message);
     }, interval);
-});
-wss.on('subscribe', (message) => {
-    console.log(`Subscribing to ${message}`)
-    wss.write(message);
-});
-wss.on('data', (message) => {
-    console.log(`Data: ${message}`)
-    wss.write(message);
+
+    connection.on('error', (event) => {
+        console.log(`error event: ${event}`);
+    });
+
+    connection.on('message', (message) => {
+        connection.send(`got client message: ${message}`);
+    });
+
+    connection.on('subscribe', (message, other) => {
+        console.log(`Subscribing to ${message} ${other}`)
+        ws.write(message);
+    });
+    connection.on('publish', (message) => {
+        console.log(`Publishing ${message}`)
+        ws.write(message);
+    });
+    connection.on('data', (message) => {
+        console.log(`Data: ${message}`)
+        ws.write(message);
+    });
 });
 
 console.log(` [*] Listening on 0.0.0.0:${port}`);
@@ -31,7 +54,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var num_pets = getRandomInt(1, 1000);
+let num_pets = getRandomInt(1, 1000);
 let oneSecond = 1000;
 let thirtySeconds = 30000;
 let interval = getRandomInt(oneSecond, thirtySeconds);
