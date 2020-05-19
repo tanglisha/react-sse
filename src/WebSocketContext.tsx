@@ -7,7 +7,7 @@ export interface WSContextType {
 }
 
 export const SocketContext: Context<WSContextType> = createContext<WSContextType>({
-    stompConnection: new StompConnection()
+    stompConnection: new StompConnection(false)
 });
 
 export const useSocketContext = (): WSContextType => {

@@ -1,4 +1,4 @@
-import { IRxStompPublishParams, RxStomp, RxStompConfig, RxStompState } from "@stomp/rx-stomp";
+import { IRxStompPublishParams, RxStomp, RxStompConfig } from "@stomp/rx-stomp";
 import { StompHeaders } from "@stomp/stompjs";
 
 export class StompConnection {
@@ -24,23 +24,13 @@ export class StompConnection {
     // Create an instance. The first RxStomp is the UMD module name and other is the class name
     private rxStomp = new RxStomp();
 
-    constructor() {
+    constructor(real: boolean = true) {
+        if (!real) { return; }
         // You can set additional configuration here
         this.rxStomp.configure(this.stompConfig);
 
         // Attempt to connect
         this.rxStomp.activate();
-        this.rxStomp.unhandledReceipts$
-            .subscribe(x => {
-                console.log("unhandled receipt");
-                console.log(x);
-            })
-
-        this.rxStomp.connected$
-            .subscribe((x: RxStompState) => {
-                console.log('activated?')
-                console.log(x);
-            })
     }
 
     subscribe$ = (destination: string, headers?: StompHeaders) =>
